@@ -294,99 +294,113 @@ class _ListViewDemoState extends State<ListViewDemo> {
         ],
       ),
       backgroundColor: const Color(0xFFFFF6F3),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          String? sectionTitle;
 
-          if (index == 0 || data[index]["type"] != data[index - 1]["type"]) {
-            sectionTitle = data[index]["type"];
-          }
+      // ✅ Show message if no products
+      body: data.isEmpty
+          ? const Center(
+              child: Text(
+                "No products yet",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFB97A95),
+                ),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                String? sectionTitle;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (sectionTitle != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    sectionTitle!,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF4B3351),
-                    ),
-                  ),
-                ),
-              Card(
-                elevation: 6,
-                shadowColor: Colors.pinkAccent.withOpacity(0.2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: const Color(0xFFFFFBFA),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 12,
-                  ),
-                  leading: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        data[index]["image_url"] ?? "",
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            Icons.broken_image,
-                            color: Colors.grey,
+                if (index == 0 || data[index]["type"] != data[index - 1]["type"]) {
+                  sectionTitle = data[index]["type"];
+                }
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (sectionTitle != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          sectionTitle!,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4B3351),
+                          ),
+                        ),
+                      ),
+                    Card(
+                      elevation: 6,
+                      shadowColor: Colors.pinkAccent.withOpacity(0.2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      color: const Color(0xFFFFFBFA),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                        leading: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              data[index]["image_url"] ?? "",
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          data[index]["name"] ?? "",
+                          style: const TextStyle(
+                            color: Color(0xFF4B3351),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Text(
+                          "Price: \$${data[index]["price"]}",
+                          style: const TextStyle(
+                            color: Color(0xFFB97A95),
+                            fontSize: 14,
+                          ),
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Color(0xFFB97A95),
+                          size: 18,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewPage(
+                                id: data[index]["id"],
+                                title: data[index]["name"] ?? "",
+                                price: data[index]["price"].toString(),
+                                image: data[index]["image_url"] ?? "",
+                              ),
+                            ),
                           );
                         },
                       ),
                     ),
-                  ),
-                  title: Text(
-                    data[index]["name"] ?? "",
-                    style: const TextStyle(
-                      color: Color(0xFF4B3351),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  subtitle: Text(
-                    "Price: \$${data[index]["price"]}",
-                    style: const TextStyle(
-                      color: Color(0xFFB97A95),
-                      fontSize: 14,
-                    ),
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Color(0xFFB97A95),
-                    size: 18,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NewPage(
-                          id: data[index]["id"],
-                          title: data[index]["name"] ?? "",
-                          price: data[index]["price"].toString(),
-                          image: data[index]["image_url"] ?? "",
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+                  ],
+                );
+              },
+            ),
     );
   }
 }
+
