@@ -40,29 +40,36 @@ class _NewPageState extends State<NewPage> {
       (double.tryParse(widget.price) ?? 0.0) * quantity;
 
   Future<void> addToCart() async {
-    final response = await http.post(
-      Uri.parse("http://localhost:5000/api/cart"),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({
-        "product_id": widget.id,
-        "quantity": quantity,
-        "degree": selectedDegree,
-        "material": lensMaterial,
-        // include these only if your backend schema supports them:
-        "product_name": widget.title,
-        "price": widget.price,
-        "image": widget.image,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Added $quantity x ${widget.title} to cart")),
+    try {
+      final response = await http.post(
+        Uri.parse("https://mobproject2.up.railway.app/api/cart"), // ✅ updated URL
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "product_id": widget.id,
+          "quantity": quantity,
+          "degree": selectedDegree,
+          "material": lensMaterial,
+          // include these only if your backend schema supports them:
+          "product_name": widget.title,
+          "price": widget.price,
+          "image": widget.image,
+        }),
       );
-    } else {
-      print("Add to cart failed: ${response.body}");
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Added $quantity x ${widget.title} to cart")),
+        );
+      } else {
+        print("Add to cart failed: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to add to cart")),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to add to cart")),
+        const SnackBar(content: Text("Error connecting to server")),
       );
     }
   }
@@ -74,21 +81,21 @@ class _NewPageState extends State<NewPage> {
         elevation: 4,
         title: Text(
           widget.title,
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFF4B3351),
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Color(0xFFFFD8EA),
-        shape: RoundedRectangleBorder(
+        backgroundColor: const Color(0xFFFFD8EA),
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
         ),
       ),
-      backgroundColor: Color(0xFFFFF6F3),
+      backgroundColor: const Color(0xFFFFF6F3),
       body: Padding(
-        padding: EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(24.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -101,24 +108,24 @@ class _NewPageState extends State<NewPage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "\$${totalPrice.toStringAsFixed(2)}",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF4B3351),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               _buildDropdown(
                 label: "Choose Degree",
                 value: selectedDegree,
                 items: degrees,
                 onChanged: (val) => setState(() => selectedDegree = val!),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 "Lens Material",
                 style: TextStyle(
                   fontSize: 18,
@@ -129,58 +136,58 @@ class _NewPageState extends State<NewPage> {
               Column(
                 children: [
                   RadioListTile<String>(
-                    title: Text("Plastic"),
-                    activeColor: Color(0xFFB97A95),
+                    title: const Text("Plastic"),
+                    activeColor: const Color(0xFFB97A95),
                     value: "Plastic",
                     groupValue: lensMaterial,
                     onChanged: (val) => setState(() => lensMaterial = val!),
                   ),
                   RadioListTile<String>(
-                    title: Text("Glass"),
-                    activeColor: Color(0xFFB97A95),
+                    title: const Text("Glass"),
+                    activeColor: const Color(0xFFB97A95),
                     value: "Glass",
                     groupValue: lensMaterial,
                     onChanged: (val) => setState(() => lensMaterial = val!),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.remove_circle, color: Color(0xFFB97A95)),
+                    icon: const Icon(Icons.remove_circle, color: Color(0xFFB97A95)),
                     onPressed: () {
                       if (quantity > 1) setState(() => quantity--);
                     },
                   ),
                   Text(
                     "$quantity",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF4B3351),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.add_circle, color: Color(0xFFB97A95)),
+                    icon: const Icon(Icons.add_circle, color: Color(0xFFB97A95)),
                     onPressed: () => setState(() => quantity++),
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFB97A95),
+                  backgroundColor: const Color(0xFFB97A95),
                   foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                   elevation: 4,
                 ),
                 onPressed: addToCart,
-                child: Text(
+                child: const Text(
                   "Add to Cart",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -199,20 +206,20 @@ class _NewPageState extends State<NewPage> {
     required void Function(String?) onChanged,
   }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Color(0xFFFFFBFA),
+        color: const Color(0xFFFFFBFA),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFFB97A95)),
+        border: Border.all(color: const Color(0xFFB97A95)),
       ),
       child: DropdownButton<String>(
         value: value,
         isExpanded: true,
-        underline: SizedBox(),
+        underline: const SizedBox(),
         items: items.map((item) {
           return DropdownMenuItem(
             value: item,
-            child: Text(item, style: TextStyle(color: Color(0xFF4B3351))),
+            child: Text(item, style: const TextStyle(color: Color(0xFF4B3351))),
           );
         }).toList(),
         onChanged: onChanged,

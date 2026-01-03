@@ -12,7 +12,8 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<dynamic> cartItems = [];
 
-  final String baseUrl = "http://127.0.0.1:5000";
+  // ✅ Updated to Railway backend URL
+  final String baseUrl = "https://mobproject2.up.railway.app";
 
   @override
   void initState() {
@@ -21,33 +22,47 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> fetchCart() async {
-    final response = await http.get(Uri.parse("$baseUrl/api/cart"));
-    if (response.statusCode == 200) {
-      setState(() {
-        cartItems = json.decode(response.body);
-      });
+    try {
+      final response = await http.get(Uri.parse("$baseUrl/api/cart"));
+      if (response.statusCode == 200) {
+        setState(() {
+          cartItems = json.decode(response.body);
+        });
+      } else {
+        debugPrint("Failed to fetch cart: ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("Error fetching cart: $e");
     }
   }
 
   Future<void> removeItem(int id) async {
-    final response =
-        await http.delete(Uri.parse("$baseUrl/api/cart/$id"));
-
-    if (response.statusCode == 200) {
-      setState(() {
-        cartItems.removeWhere((item) => item["id"] == id);
-      });
+    try {
+      final response = await http.delete(Uri.parse("$baseUrl/api/cart/$id"));
+      if (response.statusCode == 200) {
+        setState(() {
+          cartItems.removeWhere((item) => item["id"] == id);
+        });
+      } else {
+        debugPrint("Failed to remove item: ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("Error removing item: $e");
     }
   }
 
   Future<void> clearCart() async {
-    final response =
-        await http.delete(Uri.parse("$baseUrl/api/cart"));
-
-    if (response.statusCode == 200) {
-      setState(() {
-        cartItems.clear();
-      });
+    try {
+      final response = await http.delete(Uri.parse("$baseUrl/api/cart"));
+      if (response.statusCode == 200) {
+        setState(() {
+          cartItems.clear();
+        });
+      } else {
+        debugPrint("Failed to clear cart: ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("Error clearing cart: $e");
     }
   }
 
@@ -93,8 +108,6 @@ class _CartPageState extends State<CartPage> {
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(16),
-
-                          // ✅ FIXED leading widget
                           leading: SizedBox(
                             width: 60,
                             height: 60,
@@ -115,7 +128,6 @@ class _CartPageState extends State<CartPage> {
                                   : const Icon(Icons.image),
                             ),
                           ),
-
                           title: Text(
                             item["name"] ?? "Unknown",
                             style: const TextStyle(
@@ -126,20 +138,22 @@ class _CartPageState extends State<CartPage> {
                             "Type: ${item["type"] ?? "N/A"}\nPrice: \$${item["price"]}",
                           ),
                           trailing: Column(
-                            mainAxisSize: MainAxisSize.min, // ✅ FIX
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                                Text(
-                                    "\$${item["price"]}",
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                    IconButton(
-                                        padding: EdgeInsets.zero, // ✅ removes extra space
-                                        constraints: const BoxConstraints(), // ✅ removes default size
-                                        icon: const Icon(Icons.delete, color: Colors.red),
-                                        onPressed: () => removeItem(item["id"]),
-                                        ),
-                                    ],
-                                    ),
+                              Text(
+                                "\$${item["price"]}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: const Icon(Icons.delete,
+                                    color: Colors.red),
+                                onPressed: () => removeItem(item["id"]),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -8,10 +8,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "mobileproject",
+  host: process.env.DB_HOST,       // mysql.railway.internal
+  user: process.env.DB_USER,       // root
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  port: process.env.DB_PORT        // 3306
 });
 
 db.connect((err) => {
@@ -79,6 +80,7 @@ app.delete("/api/cart", (req, res) => {
   });
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
