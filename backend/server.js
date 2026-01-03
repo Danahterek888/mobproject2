@@ -8,11 +8,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,       // mysql.railway.internal
-  user: process.env.DB_USER,       // root
+  host: process.env.DB_HOST,   
+  user: process.env.DB_USER,  
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  port: process.env.DB_PORT        // 3306
+  port: process.env.DB_PORT   
 });
 
 db.connect((err) => {
@@ -78,6 +78,10 @@ app.delete("/api/cart", (req, res) => {
     if (err) return res.status(500).json(err);
     res.json({ message: "Cart cleared", result });
   });
+});
+
+app.get("/", (req, res) => {
+  res.send("Backend is running");
 });
 
 const PORT = process.env.PORT || 5000;
