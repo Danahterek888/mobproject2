@@ -35,21 +35,19 @@ class _NewPageState extends State<NewPage> {
     "-4.0",
   ];
 
-  // ✅ safer price parsing
   double get totalPrice =>
       (double.tryParse(widget.price) ?? 0.0) * quantity;
 
   Future<void> addToCart() async {
     try {
       final response = await http.post(
-        Uri.parse("https://mobproject2.up.railway.app/api/cart"), // ✅ updated URL
+        Uri.parse("https://mobproject2.up.railway.app/api/cart"),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           "product_id": widget.id,
           "quantity": quantity,
           "degree": selectedDegree,
           "material": lensMaterial,
-          // include these only if your backend schema supports them:
           "product_name": widget.title,
           "price": widget.price,
           "image": widget.image,

@@ -8,17 +8,17 @@ class ContactUs extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Contact Us"),
-        backgroundColor: const Color(0xFFFFD8EA), // soft pink
+        backgroundColor: const Color(0xFFFFD8EA),
         iconTheme: const IconThemeData(color: Color(0xFF4B3351)),
       ),
-      backgroundColor: const Color(0xFFFFF6F3), // pastel background
+      backgroundColor: const Color(0xFFFFF6F3), 
       body: Center(
         child: Card(
           elevation: 8,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          color: const Color(0xFFFFEAF4), // lighter pink card
+          color: const Color(0xFFFFEAF4),
           child: Padding(
             padding: const EdgeInsets.all(30),
             child: Column(

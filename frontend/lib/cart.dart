@@ -12,7 +12,6 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   List<dynamic> cartItems = [];
 
-  // ✅ Updated to Railway backend URL
   final String baseUrl = "https://mobproject2.up.railway.app";
 
   @override
